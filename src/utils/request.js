@@ -1,9 +1,7 @@
-// 二次封装 axios 
-import axios from 'axios' // 引入 axios
+import axios from 'axios'
 
 const service = axios.create({
-  baseURL: '/dev', // 全局beseURL,基准地址
-  timeout: 5000 // 链接请求时间,超出即超时
+  baseURL: 'dev',
+  timeout: 5000
 })
-
-export default service 
+export default service

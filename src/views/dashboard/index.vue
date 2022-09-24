@@ -1,19 +1,23 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
+    <SvgIcon icon-class="eye-open" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import SvgIcon from '@/components/SvgIcon/index.vue'
 
 export default {
   name: 'Dashboard',
+  components: { SvgIcon },
   computed: {
     ...mapGetters([
       'name'
     ])
   }
+
 }
 </script>
 
