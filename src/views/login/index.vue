@@ -1,50 +1,27 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm" :rules="rules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">
-          <img src="@/assets/common/login-logo.png" alt="">
-        </h3>
+        <h3 class="title">   <img src="@/assets/common/login-logo.png" alt=""></h3>
       </div>
 
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="Username"
-          name="username"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        />
+      <el-form-item prop="mobile">
+        <span class="svg-container el-icon-user-solid" />
+        <el-input v-model="loginForm.mobile" />
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="Password"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+        <el-input ref="pwd" v-model="loginForm.password" :type="passwordType" />
+        <span class="svg-container" @click="showPwd">
+          <svg-icon :icon-class=" passwordType === 'password' ? 'ele' : 'eye-open'" />
         </span>
       </el-form-item>
 
-      <el-button class="loginBtn" :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-
+      <el-button class="loginBtn" style="width:100%;margin-bottom:30px;" :loading="loading" @click="login">登啦</el-button>
       <div class="tips">
         <span style="margin-right:20px;">账号: 13800000002</span>
         <span> 密码: 123456</span>
@@ -55,73 +32,53 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { validPhone } from '@/utils/validate'
+// import { login } from '@/api/login'
 
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+    const phonenValue = (rule, value, callback) => {
+      if (!validPhone(value)) {
+        callback(new Error('格式错误了'))
       } else {
         callback()
       }
     }
     return {
-      loginForm: {
-        username: 'admin',
-        password: '111111'
-      },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
-      },
-      loading: false,
       passwordType: 'password',
-      redirect: undefined
-    }
-  },
-  watch: {
-    $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect
+      loginForm: {
+        mobile: '13800000002',
+        password: '123456'
       },
-      immediate: true
+      rules: {
+        mobile: [
+          { required: true, message: '请输入手机号', trigger: 'blur' },
+          // { /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/}
+          { validator: phonenValue, message: '格式错误', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 16, message: '密码格式错误', trigger: 'blur' }
+        ]
+      },
+      loading: false
     }
   },
   methods: {
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
-      } else {
-        this.passwordType = 'password'
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+      this.passwordType === 'password' ? this.passwordType = '' : this.passwordType = 'password'
+      this.$refs.pwd.focus
     },
-    handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+    async login() {
+      try {
+        await this.$refs.loginForm.validate()
+        this.loading = true
+        await this.$store.dispatch('user/loginAction', this.loginForm)
+        this.$router.push('/')
+      } finally {
+        this.loading = false
+      }
     }
   }
 }
@@ -154,7 +111,7 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: #68b0fe;
+      color:  #68b0fe;
       height: 47px;
       caret-color: $cursor;
 
@@ -175,15 +132,9 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-  $bg:#2d3a4b;
-  $dark_gray:#889aa4;
-  $light_gray:#68b0fe;
-
-/* reset element-ui css */
-.login-container {
-  background-image: url('~@/assets/common/login.jpg'); // 设置背景图片
-  background-position: center; // 将图片位置设置为充满整个屏幕
-}
+$bg:#2d3a4b;
+$dark_gray:#889aa4;
+$light_gray: #68b0fe;
 
 .login-container {
   min-height: 100%;
@@ -202,7 +153,7 @@ $cursor: #fff;
 
   .tips {
     font-size: 14px;
-    color: #fff;
+    color: #68b0fe;
     margin-bottom: 10px;
 
     span {
@@ -241,5 +192,26 @@ $cursor: #fff;
     cursor: pointer;
     user-select: none;
   }
+}
+
+/* reset element-ui css */
+.login-container {
+  background-image: url('~@/assets/common/login.jpg'); // 设置背景图片
+  background-position: center; // 将图片位置设置为充满整个屏幕
+}
+
+.loginBtn {
+  background: #407ffe;
+  height: 64px;
+  line-height: 32px;
+  font-size: 24px;
+}
+
+.el-form-item__error {
+    color: #fff
+  }
+
+ .el-form-item__error {
+  color: #fff
 }
 </style>
