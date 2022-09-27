@@ -1,10 +1,10 @@
 module.exports = {
 
-  title: '人力资源管理系统',
+  title: 'ikun资源管理系统',
 
   /**
    * @type {boolean} true | false
-   * @description  Whether fix the header
+   * @description Whether fix the header
    */
   fixedHeader: false,
 
@@ -12,5 +12,5 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: false
+  sidebarLogo: true
 }
