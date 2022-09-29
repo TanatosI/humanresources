@@ -6,10 +6,10 @@ export default {
   children: [
     {
       path: '',
-      name: '/permission',
-      component: () => ('@/views/permission/index.vue'),
+      name: 'permission',
+      component: () => import('@/views/permission'),
       meta: {
-        title: '审批',
+        title: '权限设置',
         icon: 'lock'
       }
     }

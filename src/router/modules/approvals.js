@@ -6,12 +6,9 @@ export default {
   children: [
     {
       path: '',
-      name: '/approvals',
-      component: () => ('@/views/approbals/index.vue'),
-      meta: {
-        title: '审批',
-        icon: 'tree-table'
-      }
+      name: 'approvals',
+      component: () => import('@/views/approvals'),
+      meta: { title: '审批', icon: 'tree-table' }
     }
   ]
 }

@@ -6,10 +6,10 @@ export default {
   children: [
     {
       path: '',
-      name: '/employees',
-      component: () => ('@/views/employees/index.vue'),
+      name: 'employees',
+      component: () => import('@/views/employees'),
       meta: {
-        title: '审批',
+        title: '员工原理',
         icon: 'people'
       }
     }

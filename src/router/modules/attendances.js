@@ -6,10 +6,10 @@ export default {
   children: [
     {
       path: '',
-      name: '/attendances',
-      component: () => ('@/views/attendances/index.vue'),
+      name: 'attendances',
+      component: () => import('@/views/attendances'),
       meta: {
-        title: '审批',
+        title: '考勤',
         icon: 'skill'
       }
     }

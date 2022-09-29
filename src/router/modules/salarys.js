@@ -6,10 +6,10 @@ export default {
   children: [
     {
       path: '',
-      name: '/salarys',
-      component: () => ('@/views/salarys/index.vue'),
+      name: 'salarys',
+      component: () => import('@/views/salarys'),
       meta: {
-        title: '审批',
+        title: '薪资管理',
         icon: 'money'
       }
     }

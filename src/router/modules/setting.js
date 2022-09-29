@@ -6,10 +6,10 @@ export default {
   children: [
     {
       path: '',
-      name: '/setting',
-      component: () => ('@/views/setting/index.vue'),
+      name: 'setting',
+      component: () => import('@/views/setting'),
       meta: {
-        title: '审批',
+        title: '公司设置',
         icon: 'setting'
       }
     }

@@ -6,10 +6,10 @@ export default {
   children: [
     {
       path: '',
-      name: '/social',
-      component: () => ('@/views/social/index.vue'),
+      name: 'social',
+      component: () => import('@/views/social'),
       meta: {
-        title: '审批',
+        title: '社保',
         icon: 'table'
       }
     }
