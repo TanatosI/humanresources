@@ -7,7 +7,7 @@ export default {
     {
       path: '',
       name: 'departments',
-      component: () => import('@/views/dashboard'),
+      component: () => import('@/views/departments'),
       meta: {
         title: '组织架构',
         icon: 'tree'
