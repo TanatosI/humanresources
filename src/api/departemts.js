@@ -5,3 +5,11 @@ export function getDepartments() {
     url: '/company/department'
   })
 }
+
+export function updateDepartments(data) {
+  return request({
+    url: `/company/department/${data.id}`,
+    method: 'PUT',
+    data
+  })
+}

@@ -11,7 +11,7 @@
         <el-input v-model="formData.code" style="width:80%" placeholder="1-50个字符" />
       </el-form-item>
       <el-form-item label="部门负责人" prop="manager">
-        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择">
+        <el-select v-model="formData.manager" style="width:80%" placeholder="请选择" @fovus="getEmployeeSimple">
           <el-option label="username11" value="username" />
         </el-select>
       </el-form-item>
@@ -30,7 +30,7 @@
   </el-dialog>
 </template>
 <script>
-import { getDepartments } from '@/api'
+import { getDepartments, getEmployeeSimple } from '@/api'
 export default {
   props: {
     dialogVisible: {
@@ -46,14 +46,25 @@ export default {
     const codeCheck = async(rule, value, callback) => {
       const { depts } = await getDepartments()
       console.log('depts', depts)
-      const isRepeat = depts.some(ele => ele.code === value)
+      let isRepeat = true
+      if (this.formData.id) {
+        isRepeat = depts.some(ele => ele.id !== this.formData.id && ele.code === value)
+      } else {
+        isRepeat = depts.some(ele => ele.code === value)
+      }
       isRepeat ? callback(new Error(`模块下已存在${value}`)) : callback()
     }
     const nameCheck = async(rule, value, callback) => {
       const { depts } = await getDepartments()
-      const deptstj = depts.filter(item => item.pid === this.treeNode.id)
-      console.log(deptstj)
-      const isRepeat = depts.some(ele => ele.code === value)
+      let isRepeat = true
+      if (this.formData.id) {
+        const deptstj1 = depts.filter(item => item.pid === this.treeNode.pid && item.id !== this.treeNode.id)
+        isRepeat = deptstj1.some(ele => ele.name === value)
+      } else {
+        const deptstj = depts.filter(item => item.pid === this.treeNode.id)
+        // console.log(deptstj)
+        isRepeat = deptstj.some(ele => ele.code === value)
+      }
       isRepeat ? callback(new Error(`该部门已经存在此${value}`)) : callback()
     }
     return {
@@ -86,6 +97,10 @@ export default {
     handleClose() {
       this.$emit('update:dialogVisible', false)
       this.$refs.addDeptForm.resetFields()
+    },
+    async getEmployeeSimple() {
+      const res = await getEmployeeSimple()
+      console.log(res)
     }
   }
 }
